@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "torizon/arm32v7-debian-base:2-bullseye",
+                "imgupdatetest_arm32v7-debian-python3_bullseye_release_f554aef9-bf46-4017-a752-48032a6d6c8d:latest",
+                "${workspaceFolder}/out"
+            ]
+        }
+    ]
+}
