@@ -32,14 +32,57 @@ he can generate:
 
 and ship it to the devices, making it the new my-image:base for the next time the tool will run.
 
-## Current state
+## How to build the tool
 
-ATM the POC extract file differences and dockerfile.
-The files are not usable to generate input for an ADD statement, since there are broken symlinks and wrong user rights.
-This is due to my usage of python's own tar lib, that doesn't care about those things... using tar cmd line (as we do for TCB) should fix that.
-The tool also need to run as root (to be able to access files, change attributes, ownership etc.), this can be solved by containerizing it.
-The script will run as root and access local docker via shared socket.
-User can launch the container providing base-image (tag or sha), update image and output image.
+The tool must run from a container, to build it just run:
+
+```
+docker build -t docker-image-diff .
+```
+
+## How to run the tool
+
+To run the tool you can start the container. Remember to share the docker socket to allow it to access local docker instance.
+
+```
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock docker-image-diff:latest
+```
+
+Running the tool with no arguments will show an help message.
+
+You can generate an update image by running the tool in this way (--verbose will provide some information during the different phases of the comparison):
+
+```
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock docker-image-diff:latest --verbose node:16.2.0-buster node:16.3.0-buster node:16.2.0-to-16.3.0
+```
+
+Now you can run your new image and check that it actually runs node 16.3:
+
+```
+docker run -it --rm node:16.2.0-to-16.3.0
+```
+
+By default the tool will use images for the current achitecture, if you want to generate images for a different one, use the --platform command line switch:
+
+```
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock docker-image-diff:latest --verbose --platform linux-arm node:16.2.0-buster node:16.3.0-buster node:16.2.0-to-16.3.0
+```
+
+The tool will fail if the generated image is larger than a regular download of update image. You can change this behavior using --accept-bigger command line switch.
+
+## Debugging with vscode
+
+Just open the folder, VS will ask you if you want to open it in a container, reply yes and you'll be ready to run and debug the tool.
+
+## Testing
+
+Tests use BATS framework and can be executed using bash.
+
+```
+cd tests/integrations
+. ./setup.sh
+./run.sh
+```
 
 ## Limitations
 
@@ -48,9 +91,3 @@ We may add some "intelligence" to the tool so it could determine:
 - if it's worth generating a diff image (maybe that won't save much compare to the update image)
 - if image has too many layers (time to think about a big update)
 
-## Others
-
-Balena has an approach that uses full image diffs. This would probably lead to smaller downloads but will require an ad-hoc client and will generate "monolithic" images so requirements in terms of storage space and memory on the device will increase.
-Our approach would probably lead to slightly bigger updates (no sub-file diffs), but keep storage/RAM usage at the same level as "normal" updates.
-People can solve this manually, basically by generating their own update layers and adding COPY/ADD statements at the end of their dockerfiles. This will require a lot of manual work and will also lead to lots of overwrites between the layers (every time you update a file) that aren't probably good for storage usage and performances.
-Since this approach work at the OCI image level it may work also with other container runtimes.

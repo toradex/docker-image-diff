@@ -1,0 +1,14 @@
+[MESSAGE CONTROL]
+# globally disabled messages
+# logging-fstring-interpolation:
+#   fstrings make code more readable
+# unsubscriptable-object:
+#   there is a know issue with Optional[] in python 3.9
+# cyclic-import:
+#   needeed to be able to provide types to mypy via "fake"
+#   imports with TYPE_CHECKING as a condition
+# duplicate-code:
+#   duplicated code is bad, but pylint isn't too smart in
+#   detecting it, reporting stuff like module import section
+#   or function prototypes
+disable=logging-fstring-interpolation,unsubscriptable-object, cyclic-import, duplicate-code, invalid-name

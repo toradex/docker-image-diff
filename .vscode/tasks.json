@@ -1,0 +1,27 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "validate_code",
+            "type": "shell",
+            "command": "pylint *.py && mypy *.py && pydocstyle *.py",
+            "problemMatcher": [],
+            "dependsOn": [ "complexity_mi" ]
+        },
+        {
+            "label": "complexity_mi",
+            "type": "shell",
+            "command": "radon mi --min B *.py",
+            "problemMatcher": [],
+            "dependsOn": ["complexity_cc"]
+        },
+        {
+            "label": "complexity_cc",
+            "type": "shell",
+            "command": "radon cc --min D *.py",
+            "problemMatcher": []
+        }
+    ]
+}

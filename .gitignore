@@ -1,0 +1,2 @@
+test/integration/workdir/**
+.vscode/.ropeproject/**

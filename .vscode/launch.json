@@ -5,13 +5,26 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "docker-image-diff.py",
             "console": "integratedTerminal",
             "args": [
-                "torizon/arm32v7-debian-base:2-bullseye",
-                "imgupdatetest_arm32v7-debian-python3_bullseye_release_f554aef9-bf46-4017-a752-48032a6d6c8d:latest",
-                "${workspaceFolder}/out"
+                "--keep-temp",
+                "--verbose",
+                "--max-layers",
+                "30",
+                "node:16.2.0-buster",
+                "node:16.3.0-buster",
+                "dummyupdateimage"
             ]
+            // "args": [
+            //     "--keep-temp",
+            //     "--verbose",
+            //     "--platform",
+            //     "linux/arm",
+            //     "torizon/debian:2-bullseye",
+            //     "torizon/qt5-wayland-examples:2",
+            //     "dummyupdateimage"
+            // ]
         }
     ]
 }

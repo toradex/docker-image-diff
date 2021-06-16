@@ -1,0 +1,14 @@
+{
+    "name": "Docker Diff",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "extensions": [
+        "ms-python.vscode-pylance",
+        "ms-python.python"
+    ],
+    "forwardPorts": [
+        6502
+    ],
+    "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
+}
